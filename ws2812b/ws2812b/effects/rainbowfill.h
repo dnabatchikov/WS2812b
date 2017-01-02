@@ -1,0 +1,63 @@
+/*
+ * effects.h
+ *
+ * Created: 01.01.2017 15:36:53
+ *  Author: Denis
+ */ 
+
+
+#ifndef EFFECTS_H_
+#define EFFECTS_H_
+
+#include </Users/Denis/Documents/Atmel Studio/ws2812b/ws2812b/effect.h>
+
+unsigned char effect0[][7][3] /*__attribute__((progmem))*/ = {
+		{PURPLE, NONE, NONE, NONE, NONE, NONE, NONE},
+		{NONE, PURPLE, NONE, NONE, NONE, NONE, NONE},
+		{NONE, NONE, PURPLE, NONE, NONE, NONE, NONE},
+		{NONE, NONE, NONE, PURPLE, NONE, NONE, NONE},
+		{NONE, NONE, NONE, NONE, PURPLE, NONE, NONE},
+		{NONE, NONE, NONE, NONE, NONE, PURPLE, NONE},
+		{NONE, NONE, NONE, NONE, NONE, NONE, PURPLE},
+		{BLUE, NONE, NONE, NONE, NONE, NONE, PURPLE},
+		{NONE, BLUE, NONE, NONE, NONE, NONE, PURPLE},
+		{NONE, NONE, BLUE, NONE, NONE, NONE, PURPLE},
+		{NONE, NONE, NONE, BLUE, NONE, NONE, PURPLE},
+		{NONE, NONE, NONE, NONE, BLUE, NONE, PURPLE},
+		{NONE, NONE, NONE, NONE, NONE, BLUE, PURPLE},
+		{CYAN, NONE, NONE, NONE, NONE, BLUE, PURPLE},
+		{NONE, CYAN, NONE, NONE, NONE, BLUE, PURPLE},
+		{NONE, NONE, CYAN, NONE, NONE, BLUE, PURPLE},
+		{NONE, NONE, NONE, CYAN, NONE, BLUE, PURPLE},
+		{NONE, NONE, NONE, NONE, CYAN, BLUE, PURPLE},
+		{GREEN, NONE, NONE, NONE, CYAN, BLUE, PURPLE},
+		{NONE, GREEN, NONE, NONE, CYAN, BLUE, PURPLE},
+		{NONE, NONE, GREEN, NONE, CYAN, BLUE, PURPLE},
+		{NONE, NONE, NONE, GREEN, CYAN, BLUE, PURPLE},
+		{YELLOW, NONE, NONE, GREEN, CYAN, BLUE, PURPLE},
+		{NONE, YELLOW, NONE, GREEN, CYAN, BLUE, PURPLE},
+		{NONE, NONE, YELLOW, GREEN, CYAN, BLUE, PURPLE},
+		{ORANGE, NONE, YELLOW, GREEN, CYAN, BLUE, PURPLE},
+		{NONE, ORANGE, YELLOW, GREEN, CYAN, BLUE, PURPLE},
+		{RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, PURPLE},
+		{NONE, RED, ORANGE, YELLOW, GREEN, CYAN, BLUE},
+		{NONE, NONE, RED, ORANGE, YELLOW, GREEN, CYAN},
+		{NONE, NONE, NONE, RED, ORANGE, YELLOW, GREEN},
+		{NONE, NONE, NONE, NONE, RED, ORANGE, YELLOW},
+		{NONE, NONE, NONE, NONE, NONE, RED, ORANGE},
+		{NONE, NONE, NONE, NONE, NONE, NONE, RED},
+				
+		};
+
+void showRainbowFill(void) {
+	unsigned char i, j, size = sizeof(effect0)/(PIXELS*POCK);char f = 0;
+	for(i=0;i<size;i++) { //
+		for(j=0;j<PIXELS;j++) {
+			SEND(effect0[i][j][0],effect0[i][j][1],effect0[i][j][2]);       
+		}_delay_ms(100);
+			//if(i==27) _delay_ms(106);
+	}
+	
+}
+
+#endif /* EFFECTS_H_ */

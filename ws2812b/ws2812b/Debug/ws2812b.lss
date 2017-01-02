@@ -1,0 +1,1037 @@
+
+ws2812b.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000646  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .stab         000006cc  00000000  00000000  0000069c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  2 .stabstr      00000097  00000000  00000000  00000d68  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_aranges 00000020  00000000  00000000  00000dff  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_pubnames 00000038  00000000  00000000  00000e1f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000005ef  00000000  00000000  00000e57  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000173  00000000  00000000  00001446  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000616  00000000  00000000  000015b9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000050  00000000  00000000  00001bd0  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    0000011d  00000000  00000000  00001c20  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000049  00000000  00000000  00001d3d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_pubtypes 00000038  00000000  00000000  00001d86  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	19 c0       	rjmp	.+50     	; 0x36 <__bad_interrupt>
+   4:	18 c0       	rjmp	.+48     	; 0x36 <__bad_interrupt>
+   6:	17 c0       	rjmp	.+46     	; 0x36 <__bad_interrupt>
+   8:	16 c0       	rjmp	.+44     	; 0x36 <__bad_interrupt>
+   a:	15 c0       	rjmp	.+42     	; 0x36 <__bad_interrupt>
+   c:	14 c0       	rjmp	.+40     	; 0x36 <__bad_interrupt>
+   e:	13 c0       	rjmp	.+38     	; 0x36 <__bad_interrupt>
+  10:	12 c0       	rjmp	.+36     	; 0x36 <__bad_interrupt>
+  12:	11 c0       	rjmp	.+34     	; 0x36 <__bad_interrupt>
+  14:	10 c0       	rjmp	.+32     	; 0x36 <__bad_interrupt>
+  16:	0f c0       	rjmp	.+30     	; 0x36 <__bad_interrupt>
+  18:	0e c0       	rjmp	.+28     	; 0x36 <__bad_interrupt>
+  1a:	0d c0       	rjmp	.+26     	; 0x36 <__bad_interrupt>
+  1c:	0c c0       	rjmp	.+24     	; 0x36 <__bad_interrupt>
+  1e:	0b c0       	rjmp	.+22     	; 0x36 <__bad_interrupt>
+  20:	0a c0       	rjmp	.+20     	; 0x36 <__bad_interrupt>
+  22:	09 c0       	rjmp	.+18     	; 0x36 <__bad_interrupt>
+  24:	08 c0       	rjmp	.+16     	; 0x36 <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+  32:	31 d0       	rcall	.+98     	; 0x96 <main>
+  34:	06 c3       	rjmp	.+1548   	; 0x642 <_exit>
+
+00000036 <__bad_interrupt>:
+  36:	e4 cf       	rjmp	.-56     	; 0x0 <__vectors>
+
+00000038 <send0>:
+#include <avr/io.h>
+//#include <avr/iom8a.h>
+#include <avr/delay.h>
+
+void send0() {
+	PORTD = 0xFF;
+  38:	8f ef       	ldi	r24, 0xFF	; 255
+  3a:	82 bb       	out	0x12, r24	; 18
+	
+	PORTD = 0x00;
+  3c:	12 ba       	out	0x12, r1	; 18
+	
+}
+  3e:	08 95       	ret
+
+00000040 <send1>:
+
+void send1() {
+	PORTD = 0xFF;
+  40:	8f ef       	ldi	r24, 0xFF	; 255
+  42:	82 bb       	out	0x12, r24	; 18
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  44:	00 00       	nop
+	_delay_us(1);	
+	PORTD = 0x00;
+  46:	12 ba       	out	0x12, r1	; 18
+	
+}
+  48:	08 95       	ret
+
+0000004a <send>:
+
+void send(unsigned char n)
+{
+  4a:	0f 93       	push	r16
+  4c:	1f 93       	push	r17
+  4e:	df 93       	push	r29
+  50:	cf 93       	push	r28
+  52:	0f 92       	push	r0
+  54:	cd b7       	in	r28, 0x3d	; 61
+  56:	de b7       	in	r29, 0x3e	; 62
+   volatile unsigned char i = 0;
+  58:	19 82       	std	Y+1, r1	; 0x01
+    for(i; i < 8; i++)
+  5a:	99 81       	ldd	r25, Y+1	; 0x01
+  5c:	99 81       	ldd	r25, Y+1	; 0x01
+  5e:	98 30       	cpi	r25, 0x08	; 8
+  60:	a0 f4       	brcc	.+40     	; 0x8a <send+0x40>
+    {
+        if(n & (1<<i)) {
+  62:	08 2f       	mov	r16, r24
+  64:	10 e0       	ldi	r17, 0x00	; 0
+  66:	89 81       	ldd	r24, Y+1	; 0x01
+  68:	98 01       	movw	r18, r16
+  6a:	02 c0       	rjmp	.+4      	; 0x70 <send+0x26>
+  6c:	35 95       	asr	r19
+  6e:	27 95       	ror	r18
+  70:	8a 95       	dec	r24
+  72:	e2 f7       	brpl	.-8      	; 0x6c <send+0x22>
+  74:	20 ff       	sbrs	r18, 0
+  76:	02 c0       	rjmp	.+4      	; 0x7c <send+0x32>
+            send1();                
+  78:	e3 df       	rcall	.-58     	; 0x40 <send1>
+  7a:	01 c0       	rjmp	.+2      	; 0x7e <send+0x34>
+        }
+        else {
+            send0();
+  7c:	dd df       	rcall	.-70     	; 0x38 <send0>
+}
+
+void send(unsigned char n)
+{
+   volatile unsigned char i = 0;
+    for(i; i < 8; i++)
+  7e:	89 81       	ldd	r24, Y+1	; 0x01
+  80:	8f 5f       	subi	r24, 0xFF	; 255
+  82:	89 83       	std	Y+1, r24	; 0x01
+  84:	89 81       	ldd	r24, Y+1	; 0x01
+  86:	88 30       	cpi	r24, 0x08	; 8
+  88:	70 f3       	brcs	.-36     	; 0x66 <send+0x1c>
+        }
+        else {
+            send0();
+        }
+    }
+}
+  8a:	0f 90       	pop	r0
+  8c:	cf 91       	pop	r28
+  8e:	df 91       	pop	r29
+  90:	1f 91       	pop	r17
+  92:	0f 91       	pop	r16
+  94:	08 95       	ret
+
+00000096 <main>:
+#define SEND(r,g,b){send(g);send(r);send(b);}
+int main(void)
+{
+    DDRD = 0xFF;
+  96:	8f ef       	ldi	r24, 0xFF	; 255
+  98:	81 bb       	out	0x11, r24	; 17
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  9a:	8f e1       	ldi	r24, 0x1F	; 31
+  9c:	9f eb       	ldi	r25, 0xBF	; 191
+  9e:	a2 e0       	ldi	r26, 0x02	; 2
+  a0:	81 50       	subi	r24, 0x01	; 1
+  a2:	90 40       	sbci	r25, 0x00	; 0
+  a4:	a0 40       	sbci	r26, 0x00	; 0
+  a6:	e1 f7       	brne	.-8      	; 0xa0 <main+0xa>
+  a8:	00 c0       	rjmp	.+0      	; 0xaa <main+0x14>
+  aa:	00 00       	nop
+                       
+            
+                
+        }*/
+        _delay_ms(900);
+        SEND(0,0,0);
+  ac:	80 e0       	ldi	r24, 0x00	; 0
+  ae:	cd df       	rcall	.-102    	; 0x4a <send>
+  b0:	80 e0       	ldi	r24, 0x00	; 0
+  b2:	cb df       	rcall	.-106    	; 0x4a <send>
+  b4:	80 e0       	ldi	r24, 0x00	; 0
+  b6:	c9 df       	rcall	.-110    	; 0x4a <send>
+        SEND(0,0,0);
+  b8:	80 e0       	ldi	r24, 0x00	; 0
+  ba:	c7 df       	rcall	.-114    	; 0x4a <send>
+  bc:	80 e0       	ldi	r24, 0x00	; 0
+  be:	c5 df       	rcall	.-118    	; 0x4a <send>
+  c0:	80 e0       	ldi	r24, 0x00	; 0
+  c2:	c3 df       	rcall	.-122    	; 0x4a <send>
+        SEND(0,0,0);
+  c4:	80 e0       	ldi	r24, 0x00	; 0
+  c6:	c1 df       	rcall	.-126    	; 0x4a <send>
+  c8:	80 e0       	ldi	r24, 0x00	; 0
+  ca:	bf df       	rcall	.-130    	; 0x4a <send>
+  cc:	80 e0       	ldi	r24, 0x00	; 0
+  ce:	bd df       	rcall	.-134    	; 0x4a <send>
+        SEND(0,0,0);
+  d0:	80 e0       	ldi	r24, 0x00	; 0
+  d2:	bb df       	rcall	.-138    	; 0x4a <send>
+  d4:	80 e0       	ldi	r24, 0x00	; 0
+  d6:	b9 df       	rcall	.-142    	; 0x4a <send>
+  d8:	80 e0       	ldi	r24, 0x00	; 0
+  da:	b7 df       	rcall	.-146    	; 0x4a <send>
+        SEND(0,0,0);
+  dc:	80 e0       	ldi	r24, 0x00	; 0
+  de:	b5 df       	rcall	.-150    	; 0x4a <send>
+  e0:	80 e0       	ldi	r24, 0x00	; 0
+  e2:	b3 df       	rcall	.-154    	; 0x4a <send>
+  e4:	80 e0       	ldi	r24, 0x00	; 0
+  e6:	b1 df       	rcall	.-158    	; 0x4a <send>
+        SEND(0,0,0);
+  e8:	80 e0       	ldi	r24, 0x00	; 0
+  ea:	af df       	rcall	.-162    	; 0x4a <send>
+  ec:	80 e0       	ldi	r24, 0x00	; 0
+  ee:	ad df       	rcall	.-166    	; 0x4a <send>
+  f0:	80 e0       	ldi	r24, 0x00	; 0
+  f2:	ab df       	rcall	.-170    	; 0x4a <send>
+        SEND(0,0,0);
+  f4:	80 e0       	ldi	r24, 0x00	; 0
+  f6:	a9 df       	rcall	.-174    	; 0x4a <send>
+  f8:	80 e0       	ldi	r24, 0x00	; 0
+  fa:	a7 df       	rcall	.-178    	; 0x4a <send>
+  fc:	80 e0       	ldi	r24, 0x00	; 0
+  fe:	a5 df       	rcall	.-182    	; 0x4a <send>
+ 100:	87 ef       	ldi	r24, 0xF7	; 247
+ 102:	94 e2       	ldi	r25, 0x24	; 36
+ 104:	a1 e0       	ldi	r26, 0x01	; 1
+ 106:	81 50       	subi	r24, 0x01	; 1
+ 108:	90 40       	sbci	r25, 0x00	; 0
+ 10a:	a0 40       	sbci	r26, 0x00	; 0
+ 10c:	e1 f7       	brne	.-8      	; 0x106 <main+0x70>
+ 10e:	00 c0       	rjmp	.+0      	; 0x110 <main+0x7a>
+ 110:	00 00       	nop
+        _delay_ms(375);
+        
+        SEND(0,0,255);
+ 112:	80 e0       	ldi	r24, 0x00	; 0
+ 114:	9a df       	rcall	.-204    	; 0x4a <send>
+ 116:	80 e0       	ldi	r24, 0x00	; 0
+ 118:	98 df       	rcall	.-208    	; 0x4a <send>
+ 11a:	8f ef       	ldi	r24, 0xFF	; 255
+ 11c:	96 df       	rcall	.-212    	; 0x4a <send>
+        SEND(175,0,175);
+ 11e:	80 e0       	ldi	r24, 0x00	; 0
+ 120:	94 df       	rcall	.-216    	; 0x4a <send>
+ 122:	8f ea       	ldi	r24, 0xAF	; 175
+ 124:	92 df       	rcall	.-220    	; 0x4a <send>
+ 126:	8f ea       	ldi	r24, 0xAF	; 175
+ 128:	90 df       	rcall	.-224    	; 0x4a <send>
+        SEND(0,0,0);
+ 12a:	80 e0       	ldi	r24, 0x00	; 0
+ 12c:	8e df       	rcall	.-228    	; 0x4a <send>
+ 12e:	80 e0       	ldi	r24, 0x00	; 0
+ 130:	8c df       	rcall	.-232    	; 0x4a <send>
+ 132:	80 e0       	ldi	r24, 0x00	; 0
+ 134:	8a df       	rcall	.-236    	; 0x4a <send>
+        SEND(0,0,0);
+ 136:	80 e0       	ldi	r24, 0x00	; 0
+ 138:	88 df       	rcall	.-240    	; 0x4a <send>
+ 13a:	80 e0       	ldi	r24, 0x00	; 0
+ 13c:	86 df       	rcall	.-244    	; 0x4a <send>
+ 13e:	80 e0       	ldi	r24, 0x00	; 0
+ 140:	84 df       	rcall	.-248    	; 0x4a <send>
+        SEND(0,0,0);
+ 142:	80 e0       	ldi	r24, 0x00	; 0
+ 144:	82 df       	rcall	.-252    	; 0x4a <send>
+ 146:	80 e0       	ldi	r24, 0x00	; 0
+ 148:	80 df       	rcall	.-256    	; 0x4a <send>
+ 14a:	80 e0       	ldi	r24, 0x00	; 0
+ 14c:	7e df       	rcall	.-260    	; 0x4a <send>
+        SEND(0,0,0);
+ 14e:	80 e0       	ldi	r24, 0x00	; 0
+ 150:	7c df       	rcall	.-264    	; 0x4a <send>
+ 152:	80 e0       	ldi	r24, 0x00	; 0
+ 154:	7a df       	rcall	.-268    	; 0x4a <send>
+ 156:	80 e0       	ldi	r24, 0x00	; 0
+ 158:	78 df       	rcall	.-272    	; 0x4a <send>
+        SEND(0,0,0);
+ 15a:	80 e0       	ldi	r24, 0x00	; 0
+ 15c:	76 df       	rcall	.-276    	; 0x4a <send>
+ 15e:	80 e0       	ldi	r24, 0x00	; 0
+ 160:	74 df       	rcall	.-280    	; 0x4a <send>
+ 162:	80 e0       	ldi	r24, 0x00	; 0
+ 164:	72 df       	rcall	.-284    	; 0x4a <send>
+ 166:	8f e6       	ldi	r24, 0x6F	; 111
+ 168:	91 e1       	ldi	r25, 0x11	; 17
+ 16a:	a1 e0       	ldi	r26, 0x01	; 1
+ 16c:	81 50       	subi	r24, 0x01	; 1
+ 16e:	90 40       	sbci	r25, 0x00	; 0
+ 170:	a0 40       	sbci	r26, 0x00	; 0
+ 172:	e1 f7       	brne	.-8      	; 0x16c <main+0xd6>
+ 174:	00 c0       	rjmp	.+0      	; 0x176 <main+0xe0>
+ 176:	00 00       	nop
+        _delay_ms(350);
+        
+        SEND(0,255,255);
+ 178:	8f ef       	ldi	r24, 0xFF	; 255
+ 17a:	67 df       	rcall	.-306    	; 0x4a <send>
+ 17c:	80 e0       	ldi	r24, 0x00	; 0
+ 17e:	65 df       	rcall	.-310    	; 0x4a <send>
+ 180:	8f ef       	ldi	r24, 0xFF	; 255
+ 182:	63 df       	rcall	.-314    	; 0x4a <send>
+        SEND(0,0,255);
+ 184:	80 e0       	ldi	r24, 0x00	; 0
+ 186:	61 df       	rcall	.-318    	; 0x4a <send>
+ 188:	80 e0       	ldi	r24, 0x00	; 0
+ 18a:	5f df       	rcall	.-322    	; 0x4a <send>
+ 18c:	8f ef       	ldi	r24, 0xFF	; 255
+ 18e:	5d df       	rcall	.-326    	; 0x4a <send>
+        SEND(175,0,175);
+ 190:	80 e0       	ldi	r24, 0x00	; 0
+ 192:	5b df       	rcall	.-330    	; 0x4a <send>
+ 194:	8f ea       	ldi	r24, 0xAF	; 175
+ 196:	59 df       	rcall	.-334    	; 0x4a <send>
+ 198:	8f ea       	ldi	r24, 0xAF	; 175
+ 19a:	57 df       	rcall	.-338    	; 0x4a <send>
+        SEND(0,0,0);
+ 19c:	80 e0       	ldi	r24, 0x00	; 0
+ 19e:	55 df       	rcall	.-342    	; 0x4a <send>
+ 1a0:	80 e0       	ldi	r24, 0x00	; 0
+ 1a2:	53 df       	rcall	.-346    	; 0x4a <send>
+ 1a4:	80 e0       	ldi	r24, 0x00	; 0
+ 1a6:	51 df       	rcall	.-350    	; 0x4a <send>
+        SEND(0,0,0);
+ 1a8:	80 e0       	ldi	r24, 0x00	; 0
+ 1aa:	4f df       	rcall	.-354    	; 0x4a <send>
+ 1ac:	80 e0       	ldi	r24, 0x00	; 0
+ 1ae:	4d df       	rcall	.-358    	; 0x4a <send>
+ 1b0:	80 e0       	ldi	r24, 0x00	; 0
+ 1b2:	4b df       	rcall	.-362    	; 0x4a <send>
+        SEND(0,0,0);
+ 1b4:	80 e0       	ldi	r24, 0x00	; 0
+ 1b6:	49 df       	rcall	.-366    	; 0x4a <send>
+ 1b8:	80 e0       	ldi	r24, 0x00	; 0
+ 1ba:	47 df       	rcall	.-370    	; 0x4a <send>
+ 1bc:	80 e0       	ldi	r24, 0x00	; 0
+ 1be:	45 df       	rcall	.-374    	; 0x4a <send>
+        SEND(0,0,0);
+ 1c0:	80 e0       	ldi	r24, 0x00	; 0
+ 1c2:	43 df       	rcall	.-378    	; 0x4a <send>
+ 1c4:	80 e0       	ldi	r24, 0x00	; 0
+ 1c6:	41 df       	rcall	.-382    	; 0x4a <send>
+ 1c8:	80 e0       	ldi	r24, 0x00	; 0
+ 1ca:	3f df       	rcall	.-386    	; 0x4a <send>
+ 1cc:	87 ee       	ldi	r24, 0xE7	; 231
+ 1ce:	9d ef       	ldi	r25, 0xFD	; 253
+ 1d0:	a0 e0       	ldi	r26, 0x00	; 0
+ 1d2:	81 50       	subi	r24, 0x01	; 1
+ 1d4:	90 40       	sbci	r25, 0x00	; 0
+ 1d6:	a0 40       	sbci	r26, 0x00	; 0
+ 1d8:	e1 f7       	brne	.-8      	; 0x1d2 <main+0x13c>
+ 1da:	00 c0       	rjmp	.+0      	; 0x1dc <main+0x146>
+ 1dc:	00 00       	nop
+        _delay_ms(325);
+        
+        SEND(0,255,0);
+ 1de:	8f ef       	ldi	r24, 0xFF	; 255
+ 1e0:	34 df       	rcall	.-408    	; 0x4a <send>
+ 1e2:	80 e0       	ldi	r24, 0x00	; 0
+ 1e4:	32 df       	rcall	.-412    	; 0x4a <send>
+ 1e6:	80 e0       	ldi	r24, 0x00	; 0
+ 1e8:	30 df       	rcall	.-416    	; 0x4a <send>
+        SEND(0,255,255);
+ 1ea:	8f ef       	ldi	r24, 0xFF	; 255
+ 1ec:	2e df       	rcall	.-420    	; 0x4a <send>
+ 1ee:	80 e0       	ldi	r24, 0x00	; 0
+ 1f0:	2c df       	rcall	.-424    	; 0x4a <send>
+ 1f2:	8f ef       	ldi	r24, 0xFF	; 255
+ 1f4:	2a df       	rcall	.-428    	; 0x4a <send>
+        SEND(0,0,255);
+ 1f6:	80 e0       	ldi	r24, 0x00	; 0
+ 1f8:	28 df       	rcall	.-432    	; 0x4a <send>
+ 1fa:	80 e0       	ldi	r24, 0x00	; 0
+ 1fc:	26 df       	rcall	.-436    	; 0x4a <send>
+ 1fe:	8f ef       	ldi	r24, 0xFF	; 255
+ 200:	24 df       	rcall	.-440    	; 0x4a <send>
+        SEND(175,0,175);
+ 202:	80 e0       	ldi	r24, 0x00	; 0
+ 204:	22 df       	rcall	.-444    	; 0x4a <send>
+ 206:	8f ea       	ldi	r24, 0xAF	; 175
+ 208:	20 df       	rcall	.-448    	; 0x4a <send>
+ 20a:	8f ea       	ldi	r24, 0xAF	; 175
+ 20c:	1e df       	rcall	.-452    	; 0x4a <send>
+        SEND(0,0,0);
+ 20e:	80 e0       	ldi	r24, 0x00	; 0
+ 210:	1c df       	rcall	.-456    	; 0x4a <send>
+ 212:	80 e0       	ldi	r24, 0x00	; 0
+ 214:	1a df       	rcall	.-460    	; 0x4a <send>
+ 216:	80 e0       	ldi	r24, 0x00	; 0
+ 218:	18 df       	rcall	.-464    	; 0x4a <send>
+        SEND(0,0,0);
+ 21a:	80 e0       	ldi	r24, 0x00	; 0
+ 21c:	16 df       	rcall	.-468    	; 0x4a <send>
+ 21e:	80 e0       	ldi	r24, 0x00	; 0
+ 220:	14 df       	rcall	.-472    	; 0x4a <send>
+ 222:	80 e0       	ldi	r24, 0x00	; 0
+ 224:	12 df       	rcall	.-476    	; 0x4a <send>
+        SEND(0,0,0);
+ 226:	80 e0       	ldi	r24, 0x00	; 0
+ 228:	10 df       	rcall	.-480    	; 0x4a <send>
+ 22a:	80 e0       	ldi	r24, 0x00	; 0
+ 22c:	0e df       	rcall	.-484    	; 0x4a <send>
+ 22e:	80 e0       	ldi	r24, 0x00	; 0
+ 230:	0c df       	rcall	.-488    	; 0x4a <send>
+ 232:	8f e5       	ldi	r24, 0x5F	; 95
+ 234:	9a ee       	ldi	r25, 0xEA	; 234
+ 236:	a0 e0       	ldi	r26, 0x00	; 0
+ 238:	81 50       	subi	r24, 0x01	; 1
+ 23a:	90 40       	sbci	r25, 0x00	; 0
+ 23c:	a0 40       	sbci	r26, 0x00	; 0
+ 23e:	e1 f7       	brne	.-8      	; 0x238 <main+0x1a2>
+ 240:	00 c0       	rjmp	.+0      	; 0x242 <main+0x1ac>
+ 242:	00 00       	nop
+        _delay_ms(300);
+          
+        SEND(255,255,0);
+ 244:	8f ef       	ldi	r24, 0xFF	; 255
+ 246:	01 df       	rcall	.-510    	; 0x4a <send>
+ 248:	8f ef       	ldi	r24, 0xFF	; 255
+ 24a:	ff de       	rcall	.-514    	; 0x4a <send>
+ 24c:	80 e0       	ldi	r24, 0x00	; 0
+ 24e:	fd de       	rcall	.-518    	; 0x4a <send>
+        SEND(0,255,0);
+ 250:	8f ef       	ldi	r24, 0xFF	; 255
+ 252:	fb de       	rcall	.-522    	; 0x4a <send>
+ 254:	80 e0       	ldi	r24, 0x00	; 0
+ 256:	f9 de       	rcall	.-526    	; 0x4a <send>
+ 258:	80 e0       	ldi	r24, 0x00	; 0
+ 25a:	f7 de       	rcall	.-530    	; 0x4a <send>
+        SEND(0,255,255);
+ 25c:	8f ef       	ldi	r24, 0xFF	; 255
+ 25e:	f5 de       	rcall	.-534    	; 0x4a <send>
+ 260:	80 e0       	ldi	r24, 0x00	; 0
+ 262:	f3 de       	rcall	.-538    	; 0x4a <send>
+ 264:	8f ef       	ldi	r24, 0xFF	; 255
+ 266:	f1 de       	rcall	.-542    	; 0x4a <send>
+        SEND(0,0,255);
+ 268:	80 e0       	ldi	r24, 0x00	; 0
+ 26a:	ef de       	rcall	.-546    	; 0x4a <send>
+ 26c:	80 e0       	ldi	r24, 0x00	; 0
+ 26e:	ed de       	rcall	.-550    	; 0x4a <send>
+ 270:	8f ef       	ldi	r24, 0xFF	; 255
+ 272:	eb de       	rcall	.-554    	; 0x4a <send>
+        SEND(175,0,175);
+ 274:	80 e0       	ldi	r24, 0x00	; 0
+ 276:	e9 de       	rcall	.-558    	; 0x4a <send>
+ 278:	8f ea       	ldi	r24, 0xAF	; 175
+ 27a:	e7 de       	rcall	.-562    	; 0x4a <send>
+ 27c:	8f ea       	ldi	r24, 0xAF	; 175
+ 27e:	e5 de       	rcall	.-566    	; 0x4a <send>
+        SEND(0,0,0);
+ 280:	80 e0       	ldi	r24, 0x00	; 0
+ 282:	e3 de       	rcall	.-570    	; 0x4a <send>
+ 284:	80 e0       	ldi	r24, 0x00	; 0
+ 286:	e1 de       	rcall	.-574    	; 0x4a <send>
+ 288:	80 e0       	ldi	r24, 0x00	; 0
+ 28a:	df de       	rcall	.-578    	; 0x4a <send>
+        SEND(0,0,0);
+ 28c:	80 e0       	ldi	r24, 0x00	; 0
+ 28e:	dd de       	rcall	.-582    	; 0x4a <send>
+ 290:	80 e0       	ldi	r24, 0x00	; 0
+ 292:	db de       	rcall	.-586    	; 0x4a <send>
+ 294:	80 e0       	ldi	r24, 0x00	; 0
+ 296:	d9 de       	rcall	.-590    	; 0x4a <send>
+ 298:	87 ed       	ldi	r24, 0xD7	; 215
+ 29a:	96 ed       	ldi	r25, 0xD6	; 214
+ 29c:	a0 e0       	ldi	r26, 0x00	; 0
+ 29e:	81 50       	subi	r24, 0x01	; 1
+ 2a0:	90 40       	sbci	r25, 0x00	; 0
+ 2a2:	a0 40       	sbci	r26, 0x00	; 0
+ 2a4:	e1 f7       	brne	.-8      	; 0x29e <main+0x208>
+ 2a6:	00 c0       	rjmp	.+0      	; 0x2a8 <main+0x212>
+ 2a8:	00 00       	nop
+        _delay_ms(275);
+                        
+        SEND(255,90,0);
+ 2aa:	8a e5       	ldi	r24, 0x5A	; 90
+ 2ac:	ce de       	rcall	.-612    	; 0x4a <send>
+ 2ae:	8f ef       	ldi	r24, 0xFF	; 255
+ 2b0:	cc de       	rcall	.-616    	; 0x4a <send>
+ 2b2:	80 e0       	ldi	r24, 0x00	; 0
+ 2b4:	ca de       	rcall	.-620    	; 0x4a <send>
+        SEND(255,255,0);
+ 2b6:	8f ef       	ldi	r24, 0xFF	; 255
+ 2b8:	c8 de       	rcall	.-624    	; 0x4a <send>
+ 2ba:	8f ef       	ldi	r24, 0xFF	; 255
+ 2bc:	c6 de       	rcall	.-628    	; 0x4a <send>
+ 2be:	80 e0       	ldi	r24, 0x00	; 0
+ 2c0:	c4 de       	rcall	.-632    	; 0x4a <send>
+        SEND(0,255,0);
+ 2c2:	8f ef       	ldi	r24, 0xFF	; 255
+ 2c4:	c2 de       	rcall	.-636    	; 0x4a <send>
+ 2c6:	80 e0       	ldi	r24, 0x00	; 0
+ 2c8:	c0 de       	rcall	.-640    	; 0x4a <send>
+ 2ca:	80 e0       	ldi	r24, 0x00	; 0
+ 2cc:	be de       	rcall	.-644    	; 0x4a <send>
+        SEND(0,255,255);
+ 2ce:	8f ef       	ldi	r24, 0xFF	; 255
+ 2d0:	bc de       	rcall	.-648    	; 0x4a <send>
+ 2d2:	80 e0       	ldi	r24, 0x00	; 0
+ 2d4:	ba de       	rcall	.-652    	; 0x4a <send>
+ 2d6:	8f ef       	ldi	r24, 0xFF	; 255
+ 2d8:	b8 de       	rcall	.-656    	; 0x4a <send>
+        SEND(0,0,255);
+ 2da:	80 e0       	ldi	r24, 0x00	; 0
+ 2dc:	b6 de       	rcall	.-660    	; 0x4a <send>
+ 2de:	80 e0       	ldi	r24, 0x00	; 0
+ 2e0:	b4 de       	rcall	.-664    	; 0x4a <send>
+ 2e2:	8f ef       	ldi	r24, 0xFF	; 255
+ 2e4:	b2 de       	rcall	.-668    	; 0x4a <send>
+        SEND(175,0,175);
+ 2e6:	80 e0       	ldi	r24, 0x00	; 0
+ 2e8:	b0 de       	rcall	.-672    	; 0x4a <send>
+ 2ea:	8f ea       	ldi	r24, 0xAF	; 175
+ 2ec:	ae de       	rcall	.-676    	; 0x4a <send>
+ 2ee:	8f ea       	ldi	r24, 0xAF	; 175
+ 2f0:	ac de       	rcall	.-680    	; 0x4a <send>
+        SEND(0,0,0);
+ 2f2:	80 e0       	ldi	r24, 0x00	; 0
+ 2f4:	aa de       	rcall	.-684    	; 0x4a <send>
+ 2f6:	80 e0       	ldi	r24, 0x00	; 0
+ 2f8:	a8 de       	rcall	.-688    	; 0x4a <send>
+ 2fa:	80 e0       	ldi	r24, 0x00	; 0
+ 2fc:	a6 de       	rcall	.-692    	; 0x4a <send>
+ 2fe:	8f e5       	ldi	r24, 0x5F	; 95
+ 300:	9a ee       	ldi	r25, 0xEA	; 234
+ 302:	a0 e0       	ldi	r26, 0x00	; 0
+ 304:	81 50       	subi	r24, 0x01	; 1
+ 306:	90 40       	sbci	r25, 0x00	; 0
+ 308:	a0 40       	sbci	r26, 0x00	; 0
+ 30a:	e1 f7       	brne	.-8      	; 0x304 <main+0x26e>
+ 30c:	00 c0       	rjmp	.+0      	; 0x30e <main+0x278>
+ 30e:	00 00       	nop
+        _delay_ms(300);
+                        
+        SEND(255,0,0);
+ 310:	80 e0       	ldi	r24, 0x00	; 0
+ 312:	9b de       	rcall	.-714    	; 0x4a <send>
+ 314:	8f ef       	ldi	r24, 0xFF	; 255
+ 316:	99 de       	rcall	.-718    	; 0x4a <send>
+ 318:	80 e0       	ldi	r24, 0x00	; 0
+ 31a:	97 de       	rcall	.-722    	; 0x4a <send>
+        SEND(255,90,0);
+ 31c:	8a e5       	ldi	r24, 0x5A	; 90
+ 31e:	95 de       	rcall	.-726    	; 0x4a <send>
+ 320:	8f ef       	ldi	r24, 0xFF	; 255
+ 322:	93 de       	rcall	.-730    	; 0x4a <send>
+ 324:	80 e0       	ldi	r24, 0x00	; 0
+ 326:	91 de       	rcall	.-734    	; 0x4a <send>
+        SEND(255,255,0);
+ 328:	8f ef       	ldi	r24, 0xFF	; 255
+ 32a:	8f de       	rcall	.-738    	; 0x4a <send>
+ 32c:	8f ef       	ldi	r24, 0xFF	; 255
+ 32e:	8d de       	rcall	.-742    	; 0x4a <send>
+ 330:	80 e0       	ldi	r24, 0x00	; 0
+ 332:	8b de       	rcall	.-746    	; 0x4a <send>
+        SEND(0,255,0);
+ 334:	8f ef       	ldi	r24, 0xFF	; 255
+ 336:	89 de       	rcall	.-750    	; 0x4a <send>
+ 338:	80 e0       	ldi	r24, 0x00	; 0
+ 33a:	87 de       	rcall	.-754    	; 0x4a <send>
+ 33c:	80 e0       	ldi	r24, 0x00	; 0
+ 33e:	85 de       	rcall	.-758    	; 0x4a <send>
+        SEND(0,255,255);
+ 340:	8f ef       	ldi	r24, 0xFF	; 255
+ 342:	83 de       	rcall	.-762    	; 0x4a <send>
+ 344:	80 e0       	ldi	r24, 0x00	; 0
+ 346:	81 de       	rcall	.-766    	; 0x4a <send>
+ 348:	8f ef       	ldi	r24, 0xFF	; 255
+ 34a:	7f de       	rcall	.-770    	; 0x4a <send>
+        SEND(0,0,255);
+ 34c:	80 e0       	ldi	r24, 0x00	; 0
+ 34e:	7d de       	rcall	.-774    	; 0x4a <send>
+ 350:	80 e0       	ldi	r24, 0x00	; 0
+ 352:	7b de       	rcall	.-778    	; 0x4a <send>
+ 354:	8f ef       	ldi	r24, 0xFF	; 255
+ 356:	79 de       	rcall	.-782    	; 0x4a <send>
+        SEND(175,0,175);
+ 358:	80 e0       	ldi	r24, 0x00	; 0
+ 35a:	77 de       	rcall	.-786    	; 0x4a <send>
+ 35c:	8f ea       	ldi	r24, 0xAF	; 175
+ 35e:	75 de       	rcall	.-790    	; 0x4a <send>
+ 360:	8f ea       	ldi	r24, 0xAF	; 175
+ 362:	73 de       	rcall	.-794    	; 0x4a <send>
+ 364:	8f e7       	ldi	r24, 0x7F	; 127
+ 366:	98 e3       	ldi	r25, 0x38	; 56
+ 368:	a1 e0       	ldi	r26, 0x01	; 1
+ 36a:	81 50       	subi	r24, 0x01	; 1
+ 36c:	90 40       	sbci	r25, 0x00	; 0
+ 36e:	a0 40       	sbci	r26, 0x00	; 0
+ 370:	e1 f7       	brne	.-8      	; 0x36a <main+0x2d4>
+ 372:	00 c0       	rjmp	.+0      	; 0x374 <main+0x2de>
+ 374:	00 00       	nop
+        _delay_ms(400);
+        
+        SEND(0,0,0);
+ 376:	80 e0       	ldi	r24, 0x00	; 0
+ 378:	68 de       	rcall	.-816    	; 0x4a <send>
+ 37a:	80 e0       	ldi	r24, 0x00	; 0
+ 37c:	66 de       	rcall	.-820    	; 0x4a <send>
+ 37e:	80 e0       	ldi	r24, 0x00	; 0
+ 380:	64 de       	rcall	.-824    	; 0x4a <send>
+        SEND(255,90,0);
+ 382:	8a e5       	ldi	r24, 0x5A	; 90
+ 384:	62 de       	rcall	.-828    	; 0x4a <send>
+ 386:	8f ef       	ldi	r24, 0xFF	; 255
+ 388:	60 de       	rcall	.-832    	; 0x4a <send>
+ 38a:	80 e0       	ldi	r24, 0x00	; 0
+ 38c:	5e de       	rcall	.-836    	; 0x4a <send>
+        SEND(255,255,0);
+ 38e:	8f ef       	ldi	r24, 0xFF	; 255
+ 390:	5c de       	rcall	.-840    	; 0x4a <send>
+ 392:	8f ef       	ldi	r24, 0xFF	; 255
+ 394:	5a de       	rcall	.-844    	; 0x4a <send>
+ 396:	80 e0       	ldi	r24, 0x00	; 0
+ 398:	58 de       	rcall	.-848    	; 0x4a <send>
+        SEND(0,255,0);
+ 39a:	8f ef       	ldi	r24, 0xFF	; 255
+ 39c:	56 de       	rcall	.-852    	; 0x4a <send>
+ 39e:	80 e0       	ldi	r24, 0x00	; 0
+ 3a0:	54 de       	rcall	.-856    	; 0x4a <send>
+ 3a2:	80 e0       	ldi	r24, 0x00	; 0
+ 3a4:	52 de       	rcall	.-860    	; 0x4a <send>
+        SEND(0,255,255);
+ 3a6:	8f ef       	ldi	r24, 0xFF	; 255
+ 3a8:	50 de       	rcall	.-864    	; 0x4a <send>
+ 3aa:	80 e0       	ldi	r24, 0x00	; 0
+ 3ac:	4e de       	rcall	.-868    	; 0x4a <send>
+ 3ae:	8f ef       	ldi	r24, 0xFF	; 255
+ 3b0:	4c de       	rcall	.-872    	; 0x4a <send>
+        SEND(0,0,255);
+ 3b2:	80 e0       	ldi	r24, 0x00	; 0
+ 3b4:	4a de       	rcall	.-876    	; 0x4a <send>
+ 3b6:	80 e0       	ldi	r24, 0x00	; 0
+ 3b8:	48 de       	rcall	.-880    	; 0x4a <send>
+ 3ba:	8f ef       	ldi	r24, 0xFF	; 255
+ 3bc:	46 de       	rcall	.-884    	; 0x4a <send>
+        SEND(175,0,175);
+ 3be:	80 e0       	ldi	r24, 0x00	; 0
+ 3c0:	44 de       	rcall	.-888    	; 0x4a <send>
+ 3c2:	8f ea       	ldi	r24, 0xAF	; 175
+ 3c4:	42 de       	rcall	.-892    	; 0x4a <send>
+ 3c6:	8f ea       	ldi	r24, 0xAF	; 175
+ 3c8:	40 de       	rcall	.-896    	; 0x4a <send>
+ 3ca:	8f e5       	ldi	r24, 0x5F	; 95
+ 3cc:	9a ee       	ldi	r25, 0xEA	; 234
+ 3ce:	a0 e0       	ldi	r26, 0x00	; 0
+ 3d0:	81 50       	subi	r24, 0x01	; 1
+ 3d2:	90 40       	sbci	r25, 0x00	; 0
+ 3d4:	a0 40       	sbci	r26, 0x00	; 0
+ 3d6:	e1 f7       	brne	.-8      	; 0x3d0 <main+0x33a>
+ 3d8:	00 c0       	rjmp	.+0      	; 0x3da <main+0x344>
+ 3da:	00 00       	nop
+        _delay_ms(300);
+        
+        SEND(0,0,0);
+ 3dc:	80 e0       	ldi	r24, 0x00	; 0
+ 3de:	35 de       	rcall	.-918    	; 0x4a <send>
+ 3e0:	80 e0       	ldi	r24, 0x00	; 0
+ 3e2:	33 de       	rcall	.-922    	; 0x4a <send>
+ 3e4:	80 e0       	ldi	r24, 0x00	; 0
+ 3e6:	31 de       	rcall	.-926    	; 0x4a <send>
+        SEND(0,0,0);
+ 3e8:	80 e0       	ldi	r24, 0x00	; 0
+ 3ea:	2f de       	rcall	.-930    	; 0x4a <send>
+ 3ec:	80 e0       	ldi	r24, 0x00	; 0
+ 3ee:	2d de       	rcall	.-934    	; 0x4a <send>
+ 3f0:	80 e0       	ldi	r24, 0x00	; 0
+ 3f2:	2b de       	rcall	.-938    	; 0x4a <send>
+        SEND(255,255,0);
+ 3f4:	8f ef       	ldi	r24, 0xFF	; 255
+ 3f6:	29 de       	rcall	.-942    	; 0x4a <send>
+ 3f8:	8f ef       	ldi	r24, 0xFF	; 255
+ 3fa:	27 de       	rcall	.-946    	; 0x4a <send>
+ 3fc:	80 e0       	ldi	r24, 0x00	; 0
+ 3fe:	25 de       	rcall	.-950    	; 0x4a <send>
+        SEND(0,255,0);
+ 400:	8f ef       	ldi	r24, 0xFF	; 255
+ 402:	23 de       	rcall	.-954    	; 0x4a <send>
+ 404:	80 e0       	ldi	r24, 0x00	; 0
+ 406:	21 de       	rcall	.-958    	; 0x4a <send>
+ 408:	80 e0       	ldi	r24, 0x00	; 0
+ 40a:	1f de       	rcall	.-962    	; 0x4a <send>
+        SEND(0,255,255);
+ 40c:	8f ef       	ldi	r24, 0xFF	; 255
+ 40e:	1d de       	rcall	.-966    	; 0x4a <send>
+ 410:	80 e0       	ldi	r24, 0x00	; 0
+ 412:	1b de       	rcall	.-970    	; 0x4a <send>
+ 414:	8f ef       	ldi	r24, 0xFF	; 255
+ 416:	19 de       	rcall	.-974    	; 0x4a <send>
+        SEND(0,0,255);
+ 418:	80 e0       	ldi	r24, 0x00	; 0
+ 41a:	17 de       	rcall	.-978    	; 0x4a <send>
+ 41c:	80 e0       	ldi	r24, 0x00	; 0
+ 41e:	15 de       	rcall	.-982    	; 0x4a <send>
+ 420:	8f ef       	ldi	r24, 0xFF	; 255
+ 422:	13 de       	rcall	.-986    	; 0x4a <send>
+        SEND(175,0,175);
+ 424:	80 e0       	ldi	r24, 0x00	; 0
+ 426:	11 de       	rcall	.-990    	; 0x4a <send>
+ 428:	8f ea       	ldi	r24, 0xAF	; 175
+ 42a:	0f de       	rcall	.-994    	; 0x4a <send>
+ 42c:	8f ea       	ldi	r24, 0xAF	; 175
+ 42e:	0d de       	rcall	.-998    	; 0x4a <send>
+ 430:	8f e5       	ldi	r24, 0x5F	; 95
+ 432:	9a ee       	ldi	r25, 0xEA	; 234
+ 434:	a0 e0       	ldi	r26, 0x00	; 0
+ 436:	81 50       	subi	r24, 0x01	; 1
+ 438:	90 40       	sbci	r25, 0x00	; 0
+ 43a:	a0 40       	sbci	r26, 0x00	; 0
+ 43c:	e1 f7       	brne	.-8      	; 0x436 <main+0x3a0>
+ 43e:	00 c0       	rjmp	.+0      	; 0x440 <main+0x3aa>
+ 440:	00 00       	nop
+        _delay_ms(300);
+        
+        SEND(0,0,0);
+ 442:	80 e0       	ldi	r24, 0x00	; 0
+ 444:	02 de       	rcall	.-1020   	; 0x4a <send>
+ 446:	80 e0       	ldi	r24, 0x00	; 0
+ 448:	00 de       	rcall	.-1024   	; 0x4a <send>
+ 44a:	80 e0       	ldi	r24, 0x00	; 0
+ 44c:	fe dd       	rcall	.-1028   	; 0x4a <send>
+        SEND(0,0,0);
+ 44e:	80 e0       	ldi	r24, 0x00	; 0
+ 450:	fc dd       	rcall	.-1032   	; 0x4a <send>
+ 452:	80 e0       	ldi	r24, 0x00	; 0
+ 454:	fa dd       	rcall	.-1036   	; 0x4a <send>
+ 456:	80 e0       	ldi	r24, 0x00	; 0
+ 458:	f8 dd       	rcall	.-1040   	; 0x4a <send>
+        SEND(0,0,0);
+ 45a:	80 e0       	ldi	r24, 0x00	; 0
+ 45c:	f6 dd       	rcall	.-1044   	; 0x4a <send>
+ 45e:	80 e0       	ldi	r24, 0x00	; 0
+ 460:	f4 dd       	rcall	.-1048   	; 0x4a <send>
+ 462:	80 e0       	ldi	r24, 0x00	; 0
+ 464:	f2 dd       	rcall	.-1052   	; 0x4a <send>
+        SEND(0,255,0);
+ 466:	8f ef       	ldi	r24, 0xFF	; 255
+ 468:	f0 dd       	rcall	.-1056   	; 0x4a <send>
+ 46a:	80 e0       	ldi	r24, 0x00	; 0
+ 46c:	ee dd       	rcall	.-1060   	; 0x4a <send>
+ 46e:	80 e0       	ldi	r24, 0x00	; 0
+ 470:	ec dd       	rcall	.-1064   	; 0x4a <send>
+        SEND(0,255,255);
+ 472:	8f ef       	ldi	r24, 0xFF	; 255
+ 474:	ea dd       	rcall	.-1068   	; 0x4a <send>
+ 476:	80 e0       	ldi	r24, 0x00	; 0
+ 478:	e8 dd       	rcall	.-1072   	; 0x4a <send>
+ 47a:	8f ef       	ldi	r24, 0xFF	; 255
+ 47c:	e6 dd       	rcall	.-1076   	; 0x4a <send>
+        SEND(0,0,255);
+ 47e:	80 e0       	ldi	r24, 0x00	; 0
+ 480:	e4 dd       	rcall	.-1080   	; 0x4a <send>
+ 482:	80 e0       	ldi	r24, 0x00	; 0
+ 484:	e2 dd       	rcall	.-1084   	; 0x4a <send>
+ 486:	8f ef       	ldi	r24, 0xFF	; 255
+ 488:	e0 dd       	rcall	.-1088   	; 0x4a <send>
+        SEND(175,0,175);
+ 48a:	80 e0       	ldi	r24, 0x00	; 0
+ 48c:	de dd       	rcall	.-1092   	; 0x4a <send>
+ 48e:	8f ea       	ldi	r24, 0xAF	; 175
+ 490:	dc dd       	rcall	.-1096   	; 0x4a <send>
+ 492:	8f ea       	ldi	r24, 0xAF	; 175
+ 494:	da dd       	rcall	.-1100   	; 0x4a <send>
+ 496:	8f e5       	ldi	r24, 0x5F	; 95
+ 498:	9a ee       	ldi	r25, 0xEA	; 234
+ 49a:	a0 e0       	ldi	r26, 0x00	; 0
+ 49c:	81 50       	subi	r24, 0x01	; 1
+ 49e:	90 40       	sbci	r25, 0x00	; 0
+ 4a0:	a0 40       	sbci	r26, 0x00	; 0
+ 4a2:	e1 f7       	brne	.-8      	; 0x49c <__stack+0x3d>
+ 4a4:	00 c0       	rjmp	.+0      	; 0x4a6 <__stack+0x47>
+ 4a6:	00 00       	nop
+        _delay_ms(300);
+        
+        SEND(0,0,0);
+ 4a8:	80 e0       	ldi	r24, 0x00	; 0
+ 4aa:	cf dd       	rcall	.-1122   	; 0x4a <send>
+ 4ac:	80 e0       	ldi	r24, 0x00	; 0
+ 4ae:	cd dd       	rcall	.-1126   	; 0x4a <send>
+ 4b0:	80 e0       	ldi	r24, 0x00	; 0
+ 4b2:	cb dd       	rcall	.-1130   	; 0x4a <send>
+        SEND(0,0,0);
+ 4b4:	80 e0       	ldi	r24, 0x00	; 0
+ 4b6:	c9 dd       	rcall	.-1134   	; 0x4a <send>
+ 4b8:	80 e0       	ldi	r24, 0x00	; 0
+ 4ba:	c7 dd       	rcall	.-1138   	; 0x4a <send>
+ 4bc:	80 e0       	ldi	r24, 0x00	; 0
+ 4be:	c5 dd       	rcall	.-1142   	; 0x4a <send>
+        SEND(0,0,0);
+ 4c0:	80 e0       	ldi	r24, 0x00	; 0
+ 4c2:	c3 dd       	rcall	.-1146   	; 0x4a <send>
+ 4c4:	80 e0       	ldi	r24, 0x00	; 0
+ 4c6:	c1 dd       	rcall	.-1150   	; 0x4a <send>
+ 4c8:	80 e0       	ldi	r24, 0x00	; 0
+ 4ca:	bf dd       	rcall	.-1154   	; 0x4a <send>
+        SEND(0,0,0);
+ 4cc:	80 e0       	ldi	r24, 0x00	; 0
+ 4ce:	bd dd       	rcall	.-1158   	; 0x4a <send>
+ 4d0:	80 e0       	ldi	r24, 0x00	; 0
+ 4d2:	bb dd       	rcall	.-1162   	; 0x4a <send>
+ 4d4:	80 e0       	ldi	r24, 0x00	; 0
+ 4d6:	b9 dd       	rcall	.-1166   	; 0x4a <send>
+        SEND(0,255,255);
+ 4d8:	8f ef       	ldi	r24, 0xFF	; 255
+ 4da:	b7 dd       	rcall	.-1170   	; 0x4a <send>
+ 4dc:	80 e0       	ldi	r24, 0x00	; 0
+ 4de:	b5 dd       	rcall	.-1174   	; 0x4a <send>
+ 4e0:	8f ef       	ldi	r24, 0xFF	; 255
+ 4e2:	b3 dd       	rcall	.-1178   	; 0x4a <send>
+        SEND(0,0,255);
+ 4e4:	80 e0       	ldi	r24, 0x00	; 0
+ 4e6:	b1 dd       	rcall	.-1182   	; 0x4a <send>
+ 4e8:	80 e0       	ldi	r24, 0x00	; 0
+ 4ea:	af dd       	rcall	.-1186   	; 0x4a <send>
+ 4ec:	8f ef       	ldi	r24, 0xFF	; 255
+ 4ee:	ad dd       	rcall	.-1190   	; 0x4a <send>
+        SEND(175,0,175);
+ 4f0:	80 e0       	ldi	r24, 0x00	; 0
+ 4f2:	ab dd       	rcall	.-1194   	; 0x4a <send>
+ 4f4:	8f ea       	ldi	r24, 0xAF	; 175
+ 4f6:	a9 dd       	rcall	.-1198   	; 0x4a <send>
+ 4f8:	8f ea       	ldi	r24, 0xAF	; 175
+ 4fa:	a7 dd       	rcall	.-1202   	; 0x4a <send>
+ 4fc:	8f e5       	ldi	r24, 0x5F	; 95
+ 4fe:	9a ee       	ldi	r25, 0xEA	; 234
+ 500:	a0 e0       	ldi	r26, 0x00	; 0
+ 502:	81 50       	subi	r24, 0x01	; 1
+ 504:	90 40       	sbci	r25, 0x00	; 0
+ 506:	a0 40       	sbci	r26, 0x00	; 0
+ 508:	e1 f7       	brne	.-8      	; 0x502 <__stack+0xa3>
+ 50a:	00 c0       	rjmp	.+0      	; 0x50c <__stack+0xad>
+ 50c:	00 00       	nop
+        _delay_ms(300);
+        
+        SEND(0,0,0);
+ 50e:	80 e0       	ldi	r24, 0x00	; 0
+ 510:	9c dd       	rcall	.-1224   	; 0x4a <send>
+ 512:	80 e0       	ldi	r24, 0x00	; 0
+ 514:	9a dd       	rcall	.-1228   	; 0x4a <send>
+ 516:	80 e0       	ldi	r24, 0x00	; 0
+ 518:	98 dd       	rcall	.-1232   	; 0x4a <send>
+        SEND(0,0,0);
+ 51a:	80 e0       	ldi	r24, 0x00	; 0
+ 51c:	96 dd       	rcall	.-1236   	; 0x4a <send>
+ 51e:	80 e0       	ldi	r24, 0x00	; 0
+ 520:	94 dd       	rcall	.-1240   	; 0x4a <send>
+ 522:	80 e0       	ldi	r24, 0x00	; 0
+ 524:	92 dd       	rcall	.-1244   	; 0x4a <send>
+        SEND(0,0,0);
+ 526:	80 e0       	ldi	r24, 0x00	; 0
+ 528:	90 dd       	rcall	.-1248   	; 0x4a <send>
+ 52a:	80 e0       	ldi	r24, 0x00	; 0
+ 52c:	8e dd       	rcall	.-1252   	; 0x4a <send>
+ 52e:	80 e0       	ldi	r24, 0x00	; 0
+ 530:	8c dd       	rcall	.-1256   	; 0x4a <send>
+        SEND(0,0,0);
+ 532:	80 e0       	ldi	r24, 0x00	; 0
+ 534:	8a dd       	rcall	.-1260   	; 0x4a <send>
+ 536:	80 e0       	ldi	r24, 0x00	; 0
+ 538:	88 dd       	rcall	.-1264   	; 0x4a <send>
+ 53a:	80 e0       	ldi	r24, 0x00	; 0
+ 53c:	86 dd       	rcall	.-1268   	; 0x4a <send>
+        SEND(0,0,0);
+ 53e:	80 e0       	ldi	r24, 0x00	; 0
+ 540:	84 dd       	rcall	.-1272   	; 0x4a <send>
+ 542:	80 e0       	ldi	r24, 0x00	; 0
+ 544:	82 dd       	rcall	.-1276   	; 0x4a <send>
+ 546:	80 e0       	ldi	r24, 0x00	; 0
+ 548:	80 dd       	rcall	.-1280   	; 0x4a <send>
+        SEND(0,0,255);
+ 54a:	80 e0       	ldi	r24, 0x00	; 0
+ 54c:	7e dd       	rcall	.-1284   	; 0x4a <send>
+ 54e:	80 e0       	ldi	r24, 0x00	; 0
+ 550:	7c dd       	rcall	.-1288   	; 0x4a <send>
+ 552:	8f ef       	ldi	r24, 0xFF	; 255
+ 554:	7a dd       	rcall	.-1292   	; 0x4a <send>
+        SEND(175,0,175);
+ 556:	80 e0       	ldi	r24, 0x00	; 0
+ 558:	78 dd       	rcall	.-1296   	; 0x4a <send>
+ 55a:	8f ea       	ldi	r24, 0xAF	; 175
+ 55c:	76 dd       	rcall	.-1300   	; 0x4a <send>
+ 55e:	8f ea       	ldi	r24, 0xAF	; 175
+ 560:	74 dd       	rcall	.-1304   	; 0x4a <send>
+ 562:	8f e5       	ldi	r24, 0x5F	; 95
+ 564:	9a ee       	ldi	r25, 0xEA	; 234
+ 566:	a0 e0       	ldi	r26, 0x00	; 0
+ 568:	81 50       	subi	r24, 0x01	; 1
+ 56a:	90 40       	sbci	r25, 0x00	; 0
+ 56c:	a0 40       	sbci	r26, 0x00	; 0
+ 56e:	e1 f7       	brne	.-8      	; 0x568 <__stack+0x109>
+ 570:	00 c0       	rjmp	.+0      	; 0x572 <__stack+0x113>
+ 572:	00 00       	nop
+        _delay_ms(300);
+        
+        SEND(0,0,0);
+ 574:	80 e0       	ldi	r24, 0x00	; 0
+ 576:	69 dd       	rcall	.-1326   	; 0x4a <send>
+ 578:	80 e0       	ldi	r24, 0x00	; 0
+ 57a:	67 dd       	rcall	.-1330   	; 0x4a <send>
+ 57c:	80 e0       	ldi	r24, 0x00	; 0
+ 57e:	65 dd       	rcall	.-1334   	; 0x4a <send>
+        SEND(0,0,0);
+ 580:	80 e0       	ldi	r24, 0x00	; 0
+ 582:	63 dd       	rcall	.-1338   	; 0x4a <send>
+ 584:	80 e0       	ldi	r24, 0x00	; 0
+ 586:	61 dd       	rcall	.-1342   	; 0x4a <send>
+ 588:	80 e0       	ldi	r24, 0x00	; 0
+ 58a:	5f dd       	rcall	.-1346   	; 0x4a <send>
+        SEND(0,0,0);
+ 58c:	80 e0       	ldi	r24, 0x00	; 0
+ 58e:	5d dd       	rcall	.-1350   	; 0x4a <send>
+ 590:	80 e0       	ldi	r24, 0x00	; 0
+ 592:	5b dd       	rcall	.-1354   	; 0x4a <send>
+ 594:	80 e0       	ldi	r24, 0x00	; 0
+ 596:	59 dd       	rcall	.-1358   	; 0x4a <send>
+        SEND(0,0,0);
+ 598:	80 e0       	ldi	r24, 0x00	; 0
+ 59a:	57 dd       	rcall	.-1362   	; 0x4a <send>
+ 59c:	80 e0       	ldi	r24, 0x00	; 0
+ 59e:	55 dd       	rcall	.-1366   	; 0x4a <send>
+ 5a0:	80 e0       	ldi	r24, 0x00	; 0
+ 5a2:	53 dd       	rcall	.-1370   	; 0x4a <send>
+        SEND(0,0,0);
+ 5a4:	80 e0       	ldi	r24, 0x00	; 0
+ 5a6:	51 dd       	rcall	.-1374   	; 0x4a <send>
+ 5a8:	80 e0       	ldi	r24, 0x00	; 0
+ 5aa:	4f dd       	rcall	.-1378   	; 0x4a <send>
+ 5ac:	80 e0       	ldi	r24, 0x00	; 0
+ 5ae:	4d dd       	rcall	.-1382   	; 0x4a <send>
+        SEND(0,0,0);
+ 5b0:	80 e0       	ldi	r24, 0x00	; 0
+ 5b2:	4b dd       	rcall	.-1386   	; 0x4a <send>
+ 5b4:	80 e0       	ldi	r24, 0x00	; 0
+ 5b6:	49 dd       	rcall	.-1390   	; 0x4a <send>
+ 5b8:	80 e0       	ldi	r24, 0x00	; 0
+ 5ba:	47 dd       	rcall	.-1394   	; 0x4a <send>
+        SEND(175,0,175);
+ 5bc:	80 e0       	ldi	r24, 0x00	; 0
+ 5be:	45 dd       	rcall	.-1398   	; 0x4a <send>
+ 5c0:	8f ea       	ldi	r24, 0xAF	; 175
+ 5c2:	43 dd       	rcall	.-1402   	; 0x4a <send>
+ 5c4:	8f ea       	ldi	r24, 0xAF	; 175
+ 5c6:	41 dd       	rcall	.-1406   	; 0x4a <send>
+ 5c8:	8f e5       	ldi	r24, 0x5F	; 95
+ 5ca:	9a ee       	ldi	r25, 0xEA	; 234
+ 5cc:	a0 e0       	ldi	r26, 0x00	; 0
+ 5ce:	81 50       	subi	r24, 0x01	; 1
+ 5d0:	90 40       	sbci	r25, 0x00	; 0
+ 5d2:	a0 40       	sbci	r26, 0x00	; 0
+ 5d4:	e1 f7       	brne	.-8      	; 0x5ce <__stack+0x16f>
+ 5d6:	00 c0       	rjmp	.+0      	; 0x5d8 <__stack+0x179>
+ 5d8:	00 00       	nop
+        _delay_ms(300);
+        
+        SEND(0,0,0);
+ 5da:	80 e0       	ldi	r24, 0x00	; 0
+ 5dc:	36 dd       	rcall	.-1428   	; 0x4a <send>
+ 5de:	80 e0       	ldi	r24, 0x00	; 0
+ 5e0:	34 dd       	rcall	.-1432   	; 0x4a <send>
+ 5e2:	80 e0       	ldi	r24, 0x00	; 0
+ 5e4:	32 dd       	rcall	.-1436   	; 0x4a <send>
+        SEND(0,0,0);
+ 5e6:	80 e0       	ldi	r24, 0x00	; 0
+ 5e8:	30 dd       	rcall	.-1440   	; 0x4a <send>
+ 5ea:	80 e0       	ldi	r24, 0x00	; 0
+ 5ec:	2e dd       	rcall	.-1444   	; 0x4a <send>
+ 5ee:	80 e0       	ldi	r24, 0x00	; 0
+ 5f0:	2c dd       	rcall	.-1448   	; 0x4a <send>
+        SEND(0,0,0);
+ 5f2:	80 e0       	ldi	r24, 0x00	; 0
+ 5f4:	2a dd       	rcall	.-1452   	; 0x4a <send>
+ 5f6:	80 e0       	ldi	r24, 0x00	; 0
+ 5f8:	28 dd       	rcall	.-1456   	; 0x4a <send>
+ 5fa:	80 e0       	ldi	r24, 0x00	; 0
+ 5fc:	26 dd       	rcall	.-1460   	; 0x4a <send>
+        SEND(0,0,0);
+ 5fe:	80 e0       	ldi	r24, 0x00	; 0
+ 600:	24 dd       	rcall	.-1464   	; 0x4a <send>
+ 602:	80 e0       	ldi	r24, 0x00	; 0
+ 604:	22 dd       	rcall	.-1468   	; 0x4a <send>
+ 606:	80 e0       	ldi	r24, 0x00	; 0
+ 608:	20 dd       	rcall	.-1472   	; 0x4a <send>
+        SEND(0,0,0);
+ 60a:	80 e0       	ldi	r24, 0x00	; 0
+ 60c:	1e dd       	rcall	.-1476   	; 0x4a <send>
+ 60e:	80 e0       	ldi	r24, 0x00	; 0
+ 610:	1c dd       	rcall	.-1480   	; 0x4a <send>
+ 612:	80 e0       	ldi	r24, 0x00	; 0
+ 614:	1a dd       	rcall	.-1484   	; 0x4a <send>
+        SEND(0,0,0);
+ 616:	80 e0       	ldi	r24, 0x00	; 0
+ 618:	18 dd       	rcall	.-1488   	; 0x4a <send>
+ 61a:	80 e0       	ldi	r24, 0x00	; 0
+ 61c:	16 dd       	rcall	.-1492   	; 0x4a <send>
+ 61e:	80 e0       	ldi	r24, 0x00	; 0
+ 620:	14 dd       	rcall	.-1496   	; 0x4a <send>
+        SEND(0,0,0);
+ 622:	80 e0       	ldi	r24, 0x00	; 0
+ 624:	12 dd       	rcall	.-1500   	; 0x4a <send>
+ 626:	80 e0       	ldi	r24, 0x00	; 0
+ 628:	10 dd       	rcall	.-1504   	; 0x4a <send>
+ 62a:	80 e0       	ldi	r24, 0x00	; 0
+ 62c:	0e dd       	rcall	.-1508   	; 0x4a <send>
+ 62e:	8f e5       	ldi	r24, 0x5F	; 95
+ 630:	9a ee       	ldi	r25, 0xEA	; 234
+ 632:	a0 e0       	ldi	r26, 0x00	; 0
+ 634:	81 50       	subi	r24, 0x01	; 1
+ 636:	90 40       	sbci	r25, 0x00	; 0
+ 638:	a0 40       	sbci	r26, 0x00	; 0
+ 63a:	e1 f7       	brne	.-8      	; 0x634 <__stack+0x1d5>
+ 63c:	00 c0       	rjmp	.+0      	; 0x63e <__stack+0x1df>
+ 63e:	00 00       	nop
+ 640:	2c cd       	rjmp	.-1448   	; 0x9a <main+0x4>
+
+00000642 <_exit>:
+ 642:	f8 94       	cli
+
+00000644 <__stop_program>:
+ 644:	ff cf       	rjmp	.-2      	; 0x644 <__stop_program>
