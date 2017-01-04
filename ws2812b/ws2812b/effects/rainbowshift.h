@@ -11,25 +11,28 @@
 
 #include </Users/Denis/Documents/Atmel Studio/ws2812b/ws2812b/effect.h>
 
-unsigned char effect1[][7][3] = {
-			{RED, NONE, NONE, NONE, NONE, NONE, NONE},
-			{NONE, ORANGE, NONE, NONE, NONE, NONE, NONE},
-			{NONE, NONE, YELLOW, NONE, NONE, NONE, NONE},
-			{NONE, NONE, NONE, GREEN, NONE, NONE, NONE},
-			{NONE, NONE, NONE, NONE, CYAN, NONE, NONE},
-			{NONE, NONE, NONE, NONE, NONE, BLUE, NONE},
-			{NONE, NONE, NONE, NONE, NONE, NONE, PURPLE},
-			{NONE, NONE, NONE, NONE, NONE, NONE, NONE}
-};
+unsigned char effect1[PIXELS][3] = {RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, PURPLE};
+
+void load(uint8_t counter)
+{
+	// shift with off-state
+	if(counter>0)
+		for(uint8_t i=0; i<counter; i++)
+			SEND(0,0,0);
+	// burn led with color from mask-array		
+	SEND(effect1[counter][0],effect1[counter][1],effect1[counter][2]);
+	// clean strip ahead of light
+	for(uint8_t i=0; i < (PIXELS - counter); i++)
+		SEND(0,0,0);
+		_delay_ms(250);  	
+}
 
 void showRainbowShift(void) {
 	unsigned char i, j, size = sizeof(effect1)/(PIXELS*POCK);char f = 0;
-	for(i=0;i<size;i++) { //
-		for(j=0;j<PIXELS;j++) {
-			SEND(effect1[i][j][0],effect1[i][j][1],effect1[i][j][2]);       
-		}_delay_ms(350);
-			//if(i==27) _delay_ms(106);
-	}
+	
+	for(j=0;j<PIXELS;j++) {
+		load(j);       
+	};
 	
 }
 
