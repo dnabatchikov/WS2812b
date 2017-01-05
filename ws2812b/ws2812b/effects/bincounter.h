@@ -17,7 +17,7 @@ unsigned char effect6[PIXELS][3] = {};
 void count(uint8_t counter)
 {
 	int binnumber[8];
-	SEND(0,0,0); // êîñòûëü
+	SEND(0,0,0); // ĞºĞ¾ÑÑ‚Ñ‹Ğ»ÑŒ
 	
 	for(uint8_t i=PIXELS; i>0; i--) binnumber[i] = (counter & 1<<i);
 				
